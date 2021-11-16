@@ -19,13 +19,26 @@ jobs:
       - run:
           name: Django checking
           command: python manage.py check
+  deploy:
+    executor: heroku/default
+    environment:
+      HEROKU_APP_NAME: fa-dev-example
+      HEROKU_API_KEY: 990c573f-bb6b-4442-8a4d-74c4fa5d266b
+    steps:
+      - checkout
+      - heroku/install
+      - run:
+          command: >
+            echo "The command above installs Heroku, the command below deploys.
+            What you do inbetween is up to you!"
+      - heroku/deploy-via-git
+
 
 workflows:
   build-test-deploy:
     jobs:
       - build-test
-      - heroku/deploy-via-git: # Use the pre-configured job, deploy-via-git
-          job_type: deployment
+      - deploy:
           requires:
             - build-test
           filters:
