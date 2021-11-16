@@ -23,7 +23,7 @@ jobs:
     steps:
       - attach_workspace:
           at: ./artifacts
-      - run
+      - run:
           name: "Check variables"
           command: |
             echo -e "GITHUB_TOKEN: ${GITHUB_TOKEN}"
