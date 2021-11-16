@@ -15,10 +15,10 @@ jobs:
       # install dependencies
       - run:
           name: Install Dependencies
-          command: pip install
+          command: pip install -r requirements.txt
       - run:
-          name: Run tests
-          command: npm run test
+          name: Django checking
+          command: python manage.py check
 
 workflows:
   build-test-deploy:
