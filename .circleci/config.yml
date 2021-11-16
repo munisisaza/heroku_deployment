@@ -50,7 +50,7 @@ workflows:
   build-test-deploy:
     jobs:
       - build-test
-      - publish-github-release
+      - publish-github-release:
           requires:
             - build-test
           filters:
