@@ -7,9 +7,6 @@ jobs:
   build-test:
     docker:
       - image: circleci/python:3.7-node
-        environment:
-          HEROKU_APP_NAME: fa-dev-example
-          HEROKU_API_KEY: 990c573f-bb6b-4442-8a4d-74c4fa5d266b
     steps:
       - checkout
       # install dependencies
@@ -19,6 +16,21 @@ jobs:
       - run:
           name: Django checking
           command: python manage.py check
+
+  publish-github-release:
+    docker:
+      - image: circleci/golang:1.8
+    steps:
+      - attach_workspace:
+          at: ./artifacts
+      - run:
+          name: "Publish Release on GitHub"
+          command: |
+            go get github.com/tcnksm/ghr
+            VERSION=$(my-binary --version)
+            ghr -t ${GITHUB_TOKEN} -u ${CIRCLE_PROJECT_USERNAME} -r ${CIRCLE_PROJECT_REPONAME} -c ${CIRCLE_SHA1} -delete ${VERSION} ./artifacts/
+
+
   deploy:
     executor: heroku/default
     environment:
@@ -38,7 +50,7 @@ workflows:
   build-test-deploy:
     jobs:
       - build-test
-      - deploy:
+      - publish-github-release:
           requires:
             - build-test
           filters:
