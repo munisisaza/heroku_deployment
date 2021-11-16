@@ -7,6 +7,9 @@ jobs:
   build-test:
     docker:
       - image: circleci/python:3.7-node
+        environment:
+          HEROKU_APP_NAME: fa-dev-example
+          HEROKU_API_KEY: 990c573f-bb6b-4442-8a4d-74c4fa5d266b
     steps:
       - checkout
       # install dependencies
@@ -22,9 +25,6 @@ workflows:
     jobs:
       - build-test
       - heroku/deploy-via-git: # Use the pre-configured job, deploy-via-git
-          environment:
-            HEROKU_APP_NAME: fa-dev-example
-            HEROKU_API_KEY: 990c573f-bb6b-4442-8a4d-74c4fa5d266b
           requires:
             - build-test
           filters:
