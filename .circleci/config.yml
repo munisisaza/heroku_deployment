@@ -4,27 +4,29 @@ orbs:
   heroku: circleci/heroku@0.0.10
 
 jobs:
-  build:
+  build-test:
     docker:
-      - image: circleci/node:10.16.3
-    working_directory: ~/repo
+      - image: circleci/python:3.7-node
+        environment:
+          HEROKU_APP_NAME: fa-dev-example
+          HEROKU_API_KEY: 990c573f-bb6b-4442-8a4d-74c4fa5d266b
     steps:
       - checkout
       # install dependencies
       - run:
           name: Install Dependencies
-          command: npm install
+          command: pip install -r requirements.txt
       - run:
-          name: Run tests
-          command: npm run test
+          name: Django checking
+          command: python manage.py check
 
 workflows:
-  heroku_deploy:
+  build-test-deploy:
     jobs:
-      - build
+      - build-test
       - heroku/deploy-via-git: # Use the pre-configured job, deploy-via-git
           requires:
-            - build
+            - build-test
           filters:
             branches:
               only: main
