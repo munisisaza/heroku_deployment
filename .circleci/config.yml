@@ -1,87 +1,73 @@
-version: 2.1
-
-orbs:
-  heroku: circleci/heroku@0.0.10
-  github-release: h-matsuo/github-release@0.1.1
-
-jobs:
-  build-test:
-    docker:
-      - image: circleci/python:3.7-node
-    steps:
+--- 
+jobs: 
+  build-test: 
+    docker: 
+      - 
+        image: "circleci/python:3.7-node"
+    steps: 
       - checkout
-      # install dependencies
-      - run:
-          name: Install Dependencies
-          command: pip install -r requirements.txt
-      - run:
-          name: Django checking
-          command: python manage.py check
-
-#  publish-github-release:
-#    docker:
-#      - image: circleci/golang:1.8
-#        environment:
-#          GITHUB_TOKEN: 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
-#          VERSION: v1.0.1
-#    steps:
-#      - attach_workspace:
-#          at: ./artifacts
-#      - run:
-#          name: "Publish Release on GitHub"
-#          command: |
-#            go get github.com/tcnksm/ghr
-#            VERSION=$(my-binary --version)
-#            ghr -t ${GITHUB_TOKEN} -u ${CIRCLE_PROJECT_USERNAME} -r ${CIRCLE_PROJECT_REPONAME} -c ${CIRCLE_SHA1} -delete ${VERSION} ./artifacts/
-  publish-github-release:
-    description: Create dummy file and publish a new release tagged `v1.0.1`.
-    executor: github-release/default
-    steps:
-      - run:
-          command: |
-            mkdir artifacts
-            echo dummy > ./artifacts/file
-       - run:
-          name: "Setup custom environment variables"
-          command: echo 'export GITHUB_TOKEN=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' >> $BASH_ENV
-      - github-release/create:
-          environment:
-            GITHUB_TOKEN: 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
-          tag: v1.0.1
-          title: Version v1.0.1
-          description: This release is version v1.0.1 .
-          file-path: ./artifacts/file
-
-  deploy:
-    executor: heroku/default
-    environment:
-      HEROKU_APP_NAME: fa-dev-example
+      - 
+        run: 
+          command: "pip install -r requirements.txt"
+          name: "Install Dependencies"
+      - 
+        run: 
+          command: "python manage.py check"
+          name: "Django checking"
+  deploy: 
+    environment: 
       HEROKU_API_KEY: 990c573f-bb6b-4442-8a4d-74c4fa5d266b
-    steps:
+      HEROKU_APP_NAME: fa-dev-example
+    executor: heroku/default
+    steps: 
       - checkout
       - heroku/install
-      - run:
+      - 
+        run: 
+          command: "heroku auth:whoami\n"
           name: "Check heroku user"
+  publish-github-release: 
+    description: "Create dummy file and publish a new release tagged `v1.0.1`."
+    executor: github-release/default
+    steps: 
+      - 
+        run: 
           command: |
-            heroku auth:whoami
-#      - heroku/deploy-via-git
-
-
-workflows:
-  build-test-deploy:
-    jobs:
+              mkdir artifacts
+              echo dummy > ./artifacts/file
+      - 
+        run: 
+          command: "echo 'export GITHUB_TOKEN=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' >> $BASH_ENV"
+          name: "Setup custom environment variables"
+      - 
+        github-release/create: 
+          description: "This release is version v1.0.1 ."
+          environment: 
+            GITHUB_TOKEN: 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
+          file-path: ./artifacts/file
+          tag: v1.0.1
+          title: "Version v1.0.1"
+orbs: 
+  github-release: h-matsuo/github-release@0.1.1
+  heroku: circleci/heroku@0.0.10
+version: 2.1
+workflows: 
+  build-test-deploy: 
+    jobs: 
       - build-test
-      - publish-github-release:
-          requires:
-            - build-test
-          filters:
-            branches:
+      - 
+        publish-github-release: 
+          filters: 
+            branches: 
               only: main
-            tags:
+            tags: 
               only: /^\d+\.\d+\.\d+$/
-      - deploy:
-          requires:
-            - publish-github-release
-          filters:
-            branches:
+          requires: 
+            - build-test
+      - 
+        deploy: 
+          filters: 
+            branches: 
               only: main
+          requires: 
+            - publish-github-release
