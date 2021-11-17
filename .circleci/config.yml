@@ -18,10 +18,8 @@ jobs:
           name: Django checking
           command: python manage.py check
 
- publish-github-release:
+  publish-github-release:
     description: Create dummy file and publish a new release tagged `v1.0.2`.
-    environment:
-      GITHUB_TOKEN: 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
     executor: github-release/default
     steps:
       - run:
@@ -34,20 +32,20 @@ jobs:
           description: This release is version v1.0.2 .
           file-path: ./artifacts/file
 
-  deploy:
-    executor: heroku/default
-    environment:
-      HEROKU_APP_NAME: fa-dev-example
-      HEROKU_API_KEY: 990c573f-bb6b-4442-8a4d-74c4fa5d266b
-    steps:
-      - checkout
-      - heroku/install
-      - run:
-          name: "Check heroku user"
-          command: |
-            heroku create fa-1334-dev-example --buildpack heroku/python
-            heroku git:remote -a fa-1334-dev-example
-            git push heroku main
+    deploy:
+      executor: heroku/default
+      environment:
+        HEROKU_APP_NAME: fa-dev-example
+        HEROKU_API_KEY: 990c573f-bb6b-4442-8a4d-74c4fa5d266b
+      steps:
+        - checkout
+        - heroku/install
+        - run:
+            name: "Check heroku user"
+            command: |
+              heroku create fa-1334-dev-example --buildpack heroku/python
+              heroku git:remote -a fa-1334-dev-example
+              git push heroku main
 #      - heroku/deploy-via-git
 
 
