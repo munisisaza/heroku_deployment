@@ -33,7 +33,13 @@ jobs:
 #            go get github.com/tcnksm/ghr
 #            VERSION=$(my-binary --version)
 #            ghr -t ${GITHUB_TOKEN} -u ${CIRCLE_PROJECT_USERNAME} -r ${CIRCLE_PROJECT_REPONAME} -c ${CIRCLE_SHA1} -delete ${VERSION} ./artifacts/
-
+  publish-github-release:
+    executor: github/default
+    environment:
+      GITHUB_TOKEN: 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
+      VERSION: v1.0.1
+    steps:
+      - github/release
 
   deploy:
     executor: heroku/default
@@ -54,7 +60,7 @@ workflows:
   build-test-deploy:
     jobs:
       - build-test
-      - github/release:
+      - publish-github-release:
           tag: v$CIRCLE_BUILD_NUM
           title: Release v$CIRCLE_BUILD_NUM
           requires:
