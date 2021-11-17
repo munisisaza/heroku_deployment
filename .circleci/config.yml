@@ -35,8 +35,6 @@ jobs:
 #            ghr -t ${GITHUB_TOKEN} -u ${CIRCLE_PROJECT_USERNAME} -r ${CIRCLE_PROJECT_REPONAME} -c ${CIRCLE_SHA1} -delete ${VERSION} ./artifacts/
   publish-github-release:
     description: Create dummy file and publish a new release tagged `v1.0.1`.
-    environment:
-      GITHUB_TOKEN: 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
     executor: github-release/default
     steps:
       - run:
@@ -44,6 +42,8 @@ jobs:
             mkdir artifacts
             echo dummy > ./artifacts/file
       - github-release/create:
+          environment:
+            GITHUB_TOKEN: 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
           tag: v1.0.1
           title: Version v1.0.1
           description: This release is version v1.0.1 .
