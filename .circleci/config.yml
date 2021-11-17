@@ -17,6 +17,7 @@ jobs:
       - run:
           name: Django checking
           command: python manage.py check
+
 #  publish-github-release:
 #    docker:
 #      - image: circleci/golang:1.8
@@ -68,8 +69,6 @@ workflows:
     jobs:
       - build-test
       - publish-github-release:
-          tag: v$CIRCLE_BUILD_NUM
-          title: Release v$CIRCLE_BUILD_NUM
           requires:
             - build-test
           filters:
