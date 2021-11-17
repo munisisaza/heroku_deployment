@@ -20,24 +20,18 @@ jobs:
   publish-github-release:
     docker:
       - image: circleci/golang:1.8
+        environment:
+          GITHUB_TOKEN: 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
+          VERSION: v1.0.1
     steps:
       - attach_workspace:
           at: ./artifacts
       - run:
-          name: "Check variables"
+          name: "Publish Release on GitHub"
           command: |
-            echo -e "GITHUB_TOKEN: ${GITHUB_TOKEN}"
-            echo -e "CIRCLE_PROJECT_USERNAME: ${CIRCLE_PROJECT_USERNAME}"
-            echo -e "CIRCLE_PROJECT_REPONAME: ${CIRCLE_PROJECT_REPONAME}"
-            echo -e "CIRCLE_SHA1: ${CIRCLE_SHA1}"
-            echo -e "VERSION: ${VERSION}"
-
-#      - run:
-#          name: "Publish Release on GitHub"
-#          command: |
-#            go get github.com/tcnksm/ghr
-#            VERSION=$(my-binary --version)
-#            ghr -t ${GITHUB_TOKEN} -u ${CIRCLE_PROJECT_USERNAME} -r ${CIRCLE_PROJECT_REPONAME} -c ${CIRCLE_SHA1} -delete ${VERSION} ./artifacts/
+            go get github.com/tcnksm/ghr
+            VERSION=$(my-binary --version)
+            ghr -t ${GITHUB_TOKEN} -u ${CIRCLE_PROJECT_USERNAME} -r ${CIRCLE_PROJECT_REPONAME} -c ${CIRCLE_SHA1} -delete ${VERSION} ./artifacts/
 
 
   deploy:
@@ -49,10 +43,10 @@ jobs:
       - checkout
       - heroku/install
       - run:
-          command: >
-            echo "The command above installs Heroku, the command below deploys.
-            What you do inbetween is up to you!"
-      - heroku/deploy-via-git
+          name: "Check heroku user"
+          command: |
+            heroku auth:whoami
+#      - heroku/deploy-via-git
 
 
 workflows:
@@ -67,3 +61,9 @@ workflows:
               only: main
             tags:
               only: /^\d+\.\d+\.\d+$/
+      - deploy:
+          requires:
+            - publish-github-release
+          filters:
+            branches:
+              only: main
