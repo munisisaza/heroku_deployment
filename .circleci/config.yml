@@ -36,7 +36,7 @@ jobs:
   publish-github-release:
     description: Create dummy file and publish a new release tagged `v1.0.1`.
     environment:
-      GITHUB_TOKEN: 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
+      GITHUB_TOKEN: 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
     executor: github-release/default
     steps:
       - run:
