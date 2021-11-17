@@ -1,67 +1,71 @@
---- 
-jobs: 
-  build-test: 
-    docker: 
-      - 
-        image: "circleci/python:3.7-node"
-    steps: 
+version: 2.1
+
+orbs:
+  heroku: circleci/heroku@0.0.10
+  github-release: h-matsuo/github-release@0.1.1
+
+jobs:
+  build-test:
+    docker:
+      - image: circleci/python:3.7-node
+    steps:
       - checkout
-      - 
-        run: 
-          command: "pip install -r requirements.txt"
-          name: "Install Dependencies"
-      - 
-        run: 
-          command: "python manage.py check"
-          name: "Django checking"
-  deploy: 
-    environment: 
-      HEROKU_API_KEY: 990c573f-bb6b-4442-8a4d-74c4fa5d266b
-      HEROKU_APP_NAME: fa-dev-example
+      # install dependencies
+      - run:
+          name: Install Dependencies
+          command: pip install -r requirements.txt
+      - run:
+          name: Django checking
+          command: python manage.py check
+
+ publish-github-release:
+    description: Create dummy file and publish a new release tagged `v1.0.2`.
+    environment:
+      GITHUB_TOKEN: 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
+    executor: github-release/default
+    steps:
+      - run:
+          command: |
+            mkdir artifacts
+            echo dummy > ./artifacts/file
+      - github-release/create:
+          tag: v1.0.2
+          title: Version v1.0.2
+          description: This release is version v1.0.2 .
+          file-path: ./artifacts/file
+
+  deploy:
     executor: heroku/default
-    steps: 
+    environment:
+      HEROKU_APP_NAME: fa-dev-example
+      HEROKU_API_KEY: 990c573f-bb6b-4442-8a4d-74c4fa5d266b
+    steps:
       - checkout
       - heroku/install
-      - 
-        run: 
-          command: "heroku auth:whoami\n"
+      - run:
           name: "Check heroku user"
-  publish-github-release: 
-    description: "Create dummy file and publish a new release tagged `v1.0.1`."
-    executor: github-release/default
-    steps: 
-      - 
-        run: 
           command: |
-              mkdir artifacts
-              echo dummy > ./artifacts/file
-      - 
-        github-release/create: 
-          description: "This release is version v1.0.1 ."
-          file-path: ./artifacts/file
-          tag: v1.0.1
-          title: "Version v1.0.1"
-orbs: 
-  github-release: h-matsuo/github-release@0.1.1
-  heroku: circleci/heroku@0.0.10
-version: 2.1
-workflows: 
-  build-test-deploy: 
-    jobs: 
+            heroku create fa-1334-dev-example --buildpack heroku/python
+            heroku git:remote -a fa-1334-dev-example
+            git push heroku main
+#      - heroku/deploy-via-git
+
+
+workflows:
+  build-test-deploy:
+    jobs:
       - build-test
-      - 
-        publish-github-release: 
-          filters: 
-            branches: 
-              only: main
-            tags: 
-              only: /^\d+\.\d+\.\d+$/
-          requires: 
+      - publish-github-release:
+          requires:
             - build-test
-      - 
-        deploy: 
-          filters: 
-            branches: 
+          filters:
+            branches:
               only: main
-          requires: 
+            tags:
+              only: /^\d+\.\d+\.\d+$/
+      - deploy:
+          requires:
             - publish-github-release
+          filters:
+            branches:
+              only: main
