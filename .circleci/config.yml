@@ -2,7 +2,7 @@ version: 2.1
 
 orbs:
   heroku: circleci/heroku@0.0.10
-  github: haskell-works/github-release@1.3.3
+  github-release: h-matsuo/github-release@0.1.1
 
 jobs:
   build-test:
@@ -34,12 +34,20 @@ jobs:
 #            VERSION=$(my-binary --version)
 #            ghr -t ${GITHUB_TOKEN} -u ${CIRCLE_PROJECT_USERNAME} -r ${CIRCLE_PROJECT_REPONAME} -c ${CIRCLE_SHA1} -delete ${VERSION} ./artifacts/
   publish-github-release:
-    executor: github/default
+    description: Create dummy file and publish a new release tagged `v1.0.1`.
     environment:
-      GITHUB_TOKEN: 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
-      VERSION: v1.0.1
+      GITHUB_TOKEN: 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
+    executor: github-release/default
     steps:
-      - github/release
+      - run:
+          command: |
+            mkdir artifacts
+            echo dummy > ./artifacts/file
+      - github-release/create:
+          tag: v1.0.1
+          title: Version v1.0.1
+          description: This release is version v1.0.1 .
+          file-path: ./artifacts/file
 
   deploy:
     executor: heroku/default
