@@ -41,6 +41,9 @@ jobs:
           command: |
             mkdir artifacts
             echo dummy > ./artifacts/file
+       - run:
+          name: "Setup custom environment variables"
+          command: echo 'export GITHUB_TOKEN=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' >> $BASH_ENV
       - github-release/create:
           environment:
             GITHUB_TOKEN: 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
