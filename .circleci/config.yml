@@ -35,7 +35,7 @@ jobs:
   deploy:
     executor: heroku/default
     environment:
-      HEROKU_APP_NAME: fa-dev-example
+      HEROKU_APP_NAME: fa-1320-dev-example
       HEROKU_API_KEY: 990c573f-bb6b-4442-8a4d-74c4fa5d266b
     steps:
       - checkout
@@ -43,8 +43,8 @@ jobs:
       - run:
           name: "Check heroku user"
           command: |
-            heroku create fa-1338-dev-example --buildpack heroku/python
-            git remote set-url heroku https://:git.heroku.com/fa-1338-dev-example.git
+            heroku create fa-1320-dev-example --buildpack heroku/python
+            git remote set-url heroku https://:git.heroku.com/fa-1320-dev-example.git
       #            git push heroku main
       - heroku/deploy-via-git
 
