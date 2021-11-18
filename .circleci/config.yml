@@ -45,6 +45,7 @@ jobs:
           command: |
             heroku create fa-${CIRCLE_BUILD_NUM}-dev-example --buildpack heroku/python
             git remote set-url heroku https://:git.heroku.com/fa-${CIRCLE_BUILD_NUM}-dev-example.git
+            export HEROKU_APP_NAME=fa-${CIRCLE_BUILD_NUM}-dev-example
       #            git push heroku main
       - heroku/deploy-via-git
 
