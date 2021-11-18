@@ -44,7 +44,7 @@ jobs:
           name: "Check heroku user"
           command: |
             heroku create fa-1334-dev-example --buildpack heroku/python
-            heroku git:remote -a fa-1334-dev-example
+            git remote heroku add https://git.heroku.com/fa-1334-dev-example.git
             git push heroku main
 #      - heroku/deploy-via-git
 
@@ -52,18 +52,19 @@ jobs:
 workflows:
   build-test-deploy:
     jobs:
-      - build-test
-      - publish-github-release:
-          requires:
-            - build-test
-          filters:
-            branches:
-              only: main
-            tags:
-              only: /^\d+\.\d+\.\d+$/
-      - deploy:
-          requires:
-            - publish-github-release
-          filters:
-            branches:
-              only: main
+      - deploy
+#      - build-test
+#      - publish-github-release:
+#          requires:
+#            - build-test
+#          filters:
+#            branches:
+#              only: main
+#            tags:
+#              only: /^\d+\.\d+\.\d+$/
+#      - deploy:
+#          requires:
+#            - publish-github-release
+#          filters:
+#            branches:
+#              only: main
