@@ -43,8 +43,8 @@ jobs:
       - run:
           name: "Check heroku user"
           command: |
-            heroku create fa-1334-dev-example --buildpack heroku/python
-            git remote heroku add https://git.heroku.com/fa-1334-dev-example.git
+            heroku create fa-1335-dev-example --buildpack heroku/python
+            git remote heroku add https://git.heroku.com/fa-1335-dev-example.git
             git push heroku main
 #      - heroku/deploy-via-git
 
