@@ -35,7 +35,7 @@ jobs:
   deploy:
     executor: heroku/default
     environment:
-      HEROKU_APP_NAME: fa-$CIRCLE_BUILD_NUM-dev-example
+      HEROKU_APP_NAME: fa-${CIRCLE_BUILD_NUM}-dev-example
       HEROKU_API_KEY: 990c573f-bb6b-4442-8a4d-74c4fa5d266b
     steps:
       - checkout
@@ -53,18 +53,19 @@ jobs:
 workflows:
   build-test-deploy:
     jobs:
-      #      - build-test
-      #      - publish-github-release:
-      #          requires:
-      #            - build-test
-      #          filters:
-      #            branches:
-      #              only: main
-      #            tags:
-      #              only: /^\d+\.\d+\.\d+$/
-      - deploy:
-          requires:
-            - publish-github-release
-          filters:
-            branches:
-              only: main
+      - deploy
+#      - build-test
+#      - publish-github-release:
+#          requires:
+#            - build-test
+#          filters:
+#            branches:
+#              only: main
+#            tags:
+#              only: /^\d+\.\d+\.\d+$/
+#      - deploy:
+#          requires:
+#            - publish-github-release
+#          filters:
+#            branches:
+#              only: main
