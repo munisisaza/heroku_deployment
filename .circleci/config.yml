@@ -40,9 +40,9 @@ jobs:
       - run:
           name: "Create candidate release for development"
           command: |
-            heroku create fa-${CIRCLE_BUILD_NUM}-dev-example --buildpack heroku/python
-            git remote set-url heroku https://:git.heroku.com/fa-${CIRCLE_BUILD_NUM}-dev-example.git
-            export HEROKU_APP_NAME=fa-${CIRCLE_BUILD_NUM}-dev-example
+            heroku create fa-${CIRCLE_PREVIOUS_BUILD_NUM}-dev-example --buildpack heroku/python
+            git remote set-url heroku https://:git.heroku.com/fa-${CIRCLE_PREVIOUS_BUILD_NUM}-dev-example.git
+            export HEROKU_APP_NAME=fa-${CIRCLE_PREVIOUS_BUILD_NUM}-dev-example
             git push -f https://heroku:${HEROKU_API_KEY}@git.heroku.com/${HEROKU_APP_NAME}.git ${CIRCLE_BRANCH}:master
 
 
