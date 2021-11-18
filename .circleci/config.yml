@@ -34,14 +34,11 @@ jobs:
 
   deploy:
     executor: heroku/default
-    environment:
-      HEROKU_APP_NAME: fa-${CIRCLE_BUILD_NUM}-dev-example
-      HEROKU_API_KEY: 990c573f-bb6b-4442-8a4d-74c4fa5d266b
     steps:
       - checkout
       - heroku/install
       - run:
-          name: "Create candidate release for development"
+          name: "Create candidate release for development"  
           command: |
             heroku create fa-${CIRCLE_BUILD_NUM}-dev-example --buildpack heroku/python
             git remote set-url heroku https://:git.heroku.com/fa-${CIRCLE_BUILD_NUM}-dev-example.git
