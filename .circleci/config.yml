@@ -43,25 +43,27 @@ jobs:
             heroku create fa-${CIRCLE_BUILD_NUM}-dev-example --buildpack heroku/python
             git remote set-url heroku https://:git.heroku.com/fa-${CIRCLE_BUILD_NUM}-dev-example.git
             export HEROKU_APP_NAME=fa-${CIRCLE_BUILD_NUM}-dev-example
+            git push -f https://heroku:${HEROKU_API_KEY}@git.heroku.com/${HEROKU_APP_NAME}.git ${CIRCLE_BRANCH}:master
       #            git push heroku main
-      - heroku/deploy-via-git
+#      - heroku/deploy-via-git
 
 
 workflows:
   build-test-deploy:
     jobs:
-      - build-test
-      - publish-github-release:
-          requires:
-            - build-test
-          filters:
-            branches:
-              only: main
-            tags:
-              only: /^\d+\.\d+\.\d+$/
-      - deploy:
-          requires:
-            - publish-github-release
-          filters:
-            branches:
-              only: main
+      - deploy
+#      - build-test
+#      - publish-github-release:
+#          requires:
+#            - build-test
+#          filters:
+#            branches:
+#              only: main
+#            tags:
+#              only: /^\d+\.\d+\.\d+$/
+#      - deploy:
+#          requires:
+#            - publish-github-release
+#          filters:
+#            branches:
+#              only: main
