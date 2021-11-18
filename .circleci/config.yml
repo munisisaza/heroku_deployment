@@ -38,7 +38,7 @@ jobs:
       - checkout
       - heroku/install
       - run:
-          name: "Create candidate release for development"  
+          name: "Create candidate release for development"
           command: |
             heroku create fa-${CIRCLE_BUILD_NUM}-dev-example --buildpack heroku/python
             git remote set-url heroku https://:git.heroku.com/fa-${CIRCLE_BUILD_NUM}-dev-example.git
@@ -50,19 +50,18 @@ jobs:
 workflows:
   build-test-deploy:
     jobs:
-      - deploy
-#      - build-test
-#      - publish-github-release:
-#          requires:
-#            - build-test
-#          filters:
-#            branches:
-#              only: main
-#            tags:
-#              only: /^\d+\.\d+\.\d+$/
-#      - deploy:
-#          requires:
-#            - publish-github-release
-#          filters:
-#            branches:
-#              only: main
+      - build-test
+      - publish-github-release:
+          requires:
+            - build-test
+          filters:
+            branches:
+              only: main
+            tags:
+              only: /^\d+\.\d+\.\d+$/
+      - deploy:
+          requires:
+            - publish-github-release
+          filters:
+            branches:
+              only: main
