@@ -29,7 +29,7 @@ jobs:
       - github-release/create:
           tag: v0.0.${CIRCLE_BUILD_NUM}
           title: Version v0.0.${CIRCLE_BUILD_NUM}
-          description: This release is version v0.0.${CIRCLE_BUILD_NUM} .
+          description: This release is https://fa-${CIRCLE_BUILD_NUM}-dev-example.herokuapp.com
           file-path: ./artifacts/file
 
   deploy:
