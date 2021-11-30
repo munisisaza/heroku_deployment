@@ -30,6 +30,8 @@ jobs:
             export RELEASE_NAME=$(python3 -c "import re; find = lambda x: x.group(0) if x else 'bugfix';print(find(re.search('FA-[0-9]{4}', '${GIT_BRANCH}')))")
             echo 'export RELEASE_NAME=$RELEASE_NAME' >> ~/.bashrc
             echo ${RELEASE_NAME}
+          environment:
+            RELEASE_NAME=${RELEASE_NAME}
       - run:
           command: |
             mkdir artifacts
