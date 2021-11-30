@@ -22,6 +22,7 @@ jobs:
     description: Create dummy file and publish a new release tagged `v0.0.${CIRCLE_BUILD_NUM}`.
     executor: github-release/default
     steps:
+      - checkout
       - run:
           name: "Get spesific version of release"
           command: |
