@@ -34,10 +34,9 @@ jobs:
             mkdir artifacts
             echo dummy > ./artifacts/file
       - run:
-          name: "GET name of version and check it works"
-          command: |
-            echo ${RELEASE_NAME}
-#      - github-release/create:
+          name: "Print an RELEASE_NAME var stored in the Project"
+          command: echo ${RELEASE_NAME}
+  #      - github-release/create:
 #          tag: v0.0.${CIRCLE_BUILD_NUM}
 #          title: Version v0.0.${CIRCLE_BUILD_NUM}
 #          description: This release is https://fa-${CIRCLE_BUILD_NUM}-dev-example.herokuapp.com
