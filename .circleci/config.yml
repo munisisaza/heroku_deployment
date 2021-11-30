@@ -28,6 +28,7 @@ jobs:
           command: |
             GIT_BRANCH=$(git log --first-parent --merges -1 --oneline | head -1)
             export RELEASE_NAME=$(python3 -c "import re; find = lambda x: x.group(0) if x else 'bugfix';print(find(re.search('FA-[0-9]{4}', '${GIT_BRANCH}')))")
+            echo 'export RELEASE_NAME=${RELEASE_NAME}' >> $BASH_ENV
       - run:
           command: |
             mkdir artifacts
