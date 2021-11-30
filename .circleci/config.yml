@@ -23,14 +23,23 @@ jobs:
     executor: github-release/default
     steps:
       - run:
+          name: "Get spesific version of release"
+          command: |
+            GIT_BRANCH=$(git log --first-parent --merges -1 --oneline | head -1)
+            export RELEASE_NAME=$(python3 -c "import re; find = lambda x: x.group(0) if x else 'bugfix';print(find(re.search('FA-[0-9]{4}', '${GIT_BRANCH}')))")
+      - run:
           command: |
             mkdir artifacts
             echo dummy > ./artifacts/file
-      - github-release/create:
-          tag: v0.0.${CIRCLE_BUILD_NUM}
-          title: Version v0.0.${CIRCLE_BUILD_NUM}
-          description: This release is https://fa-${CIRCLE_BUILD_NUM}-dev-example.herokuapp.com
-          file-path: ./artifacts/file
+      - run:
+          name: "GET name of version and check it works"
+          command: |
+            echo $RELEASE_NAME
+#      - github-release/create:
+#          tag: v0.0.${CIRCLE_BUILD_NUM}
+#          title: Version v0.0.${CIRCLE_BUILD_NUM}
+#          description: This release is https://fa-${CIRCLE_BUILD_NUM}-dev-example.herokuapp.com
+#          file-path: ./artifacts/file
 
   deploy:
     executor: heroku/default
@@ -49,18 +58,19 @@ jobs:
 workflows:
   build-test-deploy:
     jobs:
-      - build-test
-      - publish-github-release:
-          requires:
-            - build-test
-          filters:
-            branches:
-              only: main
-            tags:
-              only: /^\d+\.\d+\.\d+$/
-      - deploy:
-          requires:
-            - publish-github-release
-          filters:
-            branches:
-              only: main
+      - publish-github-release
+#      - build-test
+#      - publish-github-release:
+#          requires:
+#            - build-test
+#          filters:
+#            branches:
+#              only: main
+#            tags:
+#              only: /^\d+\.\d+\.\d+$/
+#      - deploy:
+#          requires:
+#            - publish-github-release
+#          filters:
+#            branches:
+#              only: main
