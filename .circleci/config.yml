@@ -31,7 +31,7 @@ jobs:
             echo 'export RELEASE_NAME=$RELEASE_NAME' >> ~/.bashrc
             echo ${RELEASE_NAME}
           environment:
-            RELEASE_NAME=${RELEASE_NAME}
+            RELEASE_NAME: ${RELEASE_NAME}
       - run:
           command: |
             mkdir artifacts
