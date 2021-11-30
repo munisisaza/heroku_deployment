@@ -36,7 +36,7 @@ jobs:
       - run:
           name: "GET name of version and check it works"
           command: |
-            echo $RELEASE_NAME
+            echo ${RELEASE_NAME}
 #      - github-release/create:
 #          tag: v0.0.${CIRCLE_BUILD_NUM}
 #          title: Version v0.0.${CIRCLE_BUILD_NUM}
